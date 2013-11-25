@@ -10,7 +10,7 @@ I use simple deployment-automation with Openshift Origin Server and Puppet modul
 diploma_deployment-automation
 
 
-Thank you all guys from http://webchat.freenode.net/?randomnick=1&channels=openshift-dev&uio=d4 
+Thanks all guys from http://webchat.freenode.net/?randomnick=1&channels=openshift-dev&uio=d4
 who helps me!
 
 =================================
