@@ -13,10 +13,6 @@ source diploma_automation/role/next_role.sh
 #NAMED_TSIG_PRIV_KEY="XI1h53oLBi1uGXEbV1NU301BQp/w5A=="
 #BROKER_FQDN="brokertest1.kpi.diplom.net"
 
-
-
-
-
 ###Start registrathions on DNS
 
 IP_ADDRESS=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
@@ -90,14 +86,12 @@ EOF
 
 yum install -y puppet facter tar
 mkdir -p /etc/puppet/modules
-
-
-
 yes|cp -rf diploma_automation/init/modules_fixed_release2/* /etc/puppet/modules/
 
+#####################3
+#Start generating manifests:
 
 cat <<EOF > manifest_broker.pp
-
 class { 'openshift_origin' :
   node_fqdn                  => "${TEMPHOSTNAME}.${CLOUDNAME}",
   cloud_domain               => '${CLOUDNAME}',
@@ -123,7 +117,9 @@ class { 'openshift_origin' :
 }
 EOF
 
-#puppet apply --verbose manifest_aio.pp
+puppet apply --verbose manifest_broker.pp
+
+
 exit
 
 ####FIXER:
