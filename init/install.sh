@@ -5,6 +5,7 @@
 #TEMPHOSTNAME=$1
 
 
+echo "Hello!"
 source diploma_automation/role/next_role.sh
 
 #TEMPHOSTNAME="brokertest1"
