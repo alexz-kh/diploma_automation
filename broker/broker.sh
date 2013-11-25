@@ -2,10 +2,16 @@
 
 
 #TEMPHOSTNAME=$1
-TEMPHOSTNAME=brokertest1
 
-OURBIND=37.57.27.211
-CLOUDNAME=kpi.diplom.net
+
+
+#TEMPHOSTNAME="brokertest1"
+#OURBIND="37.57.27.211"
+#CLOUDNAME="kpi.diplom.net"
+#NAMED_TSIG_PRIV_KEY="XI1h53oLBi1uGXEbV1NU301BQp/w5A=="
+#BROKER_FQDN="brokertest1.kpi.diplom.net"
+
+
 
 IP_ADDRESS=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 #IP_ADDRESS=192.168.1.69
@@ -23,7 +29,7 @@ domainname ${CLOUDNAME}
 cat <<  _EOF > nsupdate.key
     key kpi.diplom.net {
       algorithm HMAC-MD5;
-        secret "XI1h53oLBi1uGXEbV1NU301BQp/w5A==";
+        secret "$NAMED_TSIG_PRIV_KEY";
     };
 _EOF
 
@@ -102,16 +108,15 @@ class { 'openshift_origin' :
   broker_auth_plugin         => 'mongo',
   broker_dns_plugin          => 'nsupdate',
   broker_dns_gsstsig         => true,
-  named_ipaddress=> "37.57.27.211",
-  broker_fqdn=> "brokeraiotest1.kpi.diplom.net",
-  named_tsig_priv_key=> "XI1h53oLBi1uGXEbV1NU301BQp/w5A==",
+  named_ipaddress=> "${OURBIND}",
+  broker_fqdn=> "${BROKER_FQDN}",
+  named_tsig_priv_key=> "${NAMED_TSIG_PRIV_KEY}",
 
 }
 EOF
 
 #puppet apply --verbose manifest_aio.pp
-wget 
-exit 
+exit
 
 ####FIXER:
 ###yum install npm -y
