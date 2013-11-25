@@ -1,5 +1,9 @@
 #!/bin/bash
 
+
+DIR=`dirname $0`
+cd $DIR
+
 #Put this file on VMs!
 
 if which git >/dev/null; then

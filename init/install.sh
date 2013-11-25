@@ -1,13 +1,11 @@
 #!/bin/bash
 
-DIR=`dirname $0`
-cd $DIR
 
 
 #TEMPHOSTNAME=$1
 
 
-source ../role/next_role.sh
+source diploma_automation/role/next_role.sh
 
 #TEMPHOSTNAME="brokertest1"
 #OURBIND="37.57.27.211"
