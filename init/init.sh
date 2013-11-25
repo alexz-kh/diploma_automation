@@ -19,7 +19,7 @@ if [ -d "diploma_automation" ]; then
     ./role/next_role.sh
     else 
     git clone git://github.com/alexz-kh/diploma_automation.git
-    ./diploma_automation/role/next_role.sh
+    ./diploma_automation/init/install.sh
 
 fi
 

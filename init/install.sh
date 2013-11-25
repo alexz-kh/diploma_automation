@@ -4,6 +4,7 @@
 #TEMPHOSTNAME=$1
 
 
+source ../role/next_role.sh
 
 #TEMPHOSTNAME="brokertest1"
 #OURBIND="37.57.27.211"
