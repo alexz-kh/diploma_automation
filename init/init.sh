@@ -4,6 +4,20 @@
 
 
 yum install -y git
-git clone git@github.com:alexz-kh/diploma_automation.git
+git clone git://github.com/alexz-kh/diploma_automation.git
 
-source 
+./diploma_automation/role/next_role.sh
+
+
+
+exit 
+
+
+
+cat _EOF >>> ~/.ssh/config 
+Host github.com
+    User git
+    Hostname github.com
+    StrictHostKeyChecking no
+    UserKnownHostsFile=/dev/null
+
