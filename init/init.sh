@@ -20,12 +20,13 @@ if [ -d "diploma_automation" ]; then
     git stash
     git checkout master
     git pull origin master --force
-    ./diploma_automation/init/install.sh
-    else 
+    cd ../
+    else
     git clone git://github.com/alexz-kh/diploma_automation.git
-    ./diploma_automation/init/install.sh
-
 fi
+
+
+./diploma_automation/init/install.sh
 
 
 exit 

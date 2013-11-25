@@ -5,7 +5,6 @@
 #TEMPHOSTNAME=$1
 
 
-echo "Hello!"
 source diploma_automation/role/next_role.sh
 
 #TEMPHOSTNAME="brokertest1"
@@ -15,13 +14,12 @@ source diploma_automation/role/next_role.sh
 #BROKER_FQDN="brokertest1.kpi.diplom.net"
 
 
-echo " ${TEMPHOSTNAME}.${CLOUDNAME}  ${CLOUDNAME} !!!!!!!!!!!!!!!!"
 
 
-exit 
+
+###Start registrathions on DNS
 
 IP_ADDRESS=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
-#IP_ADDRESS=192.168.1.69
 
 yum install -y bind-utils
 
@@ -92,7 +90,10 @@ EOF
 
 yum install -y puppet facter tar
 mkdir -p /etc/puppet/modules
-#puppet module install openshift/openshift_origin --force
+
+
+
+yes|cp -rf diploma_automation/init/modules_fixed_release2 /etc/puppet/modules
 
 
 cat <<EOF > manifest_broker.pp
