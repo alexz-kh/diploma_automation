@@ -16,7 +16,7 @@ if [ -d "diploma_automation" ]; then
     git stash
     git checkout master
     git pull origin master --force
-    ./role/next_role.sh
+    ./diploma_automation/init/install.sh
     else 
     git clone git://github.com/alexz-kh/diploma_automation.git
     ./diploma_automation/init/install.sh
