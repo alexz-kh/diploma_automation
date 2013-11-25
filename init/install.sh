@@ -12,6 +12,10 @@
 #BROKER_FQDN="brokertest1.kpi.diplom.net"
 
 
+echo " ${TEMPHOSTNAME}.${CLOUDNAME}  ${CLOUDNAME} !!!!!!!!!!!!!!!!"
+
+
+exit 
 
 IP_ADDRESS=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 #IP_ADDRESS=192.168.1.69
