@@ -93,7 +93,7 @@ mkdir -p /etc/puppet/modules
 
 
 
-yes|cp -rf diploma_automation/init/modules_fixed_release2 /etc/puppet/modules
+yes|cp -rf diploma_automation/init/modules_fixed_release2/ /etc/puppet/modules
 
 
 cat <<EOF > manifest_broker.pp
