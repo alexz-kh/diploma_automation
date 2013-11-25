@@ -1,22 +1,33 @@
 #!/bin/bash
 
+#Put this file on VMs!
+
+if which git >/dev/null; then
+    echo "Git exist,all ok,go next!"
+else
+    echo "Git does not exist!installing..."
+    yum install -y git
+
+fi
 
 
-#todo add if!
-yum install -y git
+if [ -d "diploma_automation" ]; then
+    cd diploma_automation
+    git stash
+    git checkout master
+    git pull origin master --force
+    ./role/next_role.sh
+    else 
+    git clone git://github.com/alexz-kh/diploma_automation.git
+    ./diploma_automation/role/next_role.sh
 
-git clone git://github.com/alexz-kh/diploma_automation.git
-
-cd diploma_automation
-git reset
-git stash
-git pull --force
-
-./role/next_role.sh
-
+fi
 
 
 exit 
+
+
+
 
 
 
