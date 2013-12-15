@@ -18,6 +18,36 @@ checker(){
     fi
 }
 
+prepare_vm(){
+
+if [[ $1 =~ ^[broker]$ ]]
+    then
+	echo "Prepare system for Broker:"
+	sed -e "s#HDD_STUB#${HDD}#g" broker_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
+	sed -e "s#NAME_STUB#${HDD}#g" broker_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
+
+	"exit "
+elif [[ $1 =~ ^[node]$ ]]
+    then 
+	echo "Prepare system for node:"
+	sed -e "s#HDD_STUB#${HDD}#g" node_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
+	sed -e "s#NAME_STUB#${HDD}#g" node_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
+	exit
+
+else
+        footer "Wrong choose,Neo..."
+	exit 1
+fi
+
+}
+
+
+
+
+
+
+
+
 SYSTEMS_PREFIX="dep1"
 COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/centos_clear_wo_lvm_40G_2.6.32-431.el6.x86_64.qcow2"
 #COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/stub.qcow2"
@@ -35,6 +65,12 @@ echo    # just move to a new line
     then
 	echo "Choosed 1=Broker"
 	REPLY="broker"
+	sed -i "s/role=.*/role=\"${REPLY}\"/g" ../role/next_role.sh
+	git add .
+	git commit -a -m "change role to ${REPLY}"
+	git push
+	source ../role/next_role.sh
+	prepare_vm $REPLY
 
     elif [[ $REPLY =~ ^[2]$ ]]
     then 
@@ -75,7 +111,16 @@ else
     checker "When try copy img!"
 fi
 
-sed -e "s#HDD_STUB#${HDD}#g" broker_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
+##
+exit 
+
+
+
+
+###
+
+
+
 virsh define ${SYSTEMS_PREFIX}_${role}.xml
 checker "When try define systems!"
 footer "Finish define kvm system with ROLE=${role}"
