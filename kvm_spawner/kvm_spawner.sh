@@ -19,8 +19,8 @@ checker(){
 }
 
 SYSTEMS_PREFIX="dep1"
-#COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/centos_clear_wo_lvm_40G_2.6.32-431.el6.x86_64.qcow2"
-COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/stub.qcow2"
+COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/centos_clear_wo_lvm_40G_2.6.32-431.el6.x86_64.qcow2"
+#COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/stub.qcow2"
 BASE_DIR="/home/alexz/work/diplom/test_spawner1"
 
 mkdir -p "${BASE_DIR}/systems"
