@@ -1,5 +1,5 @@
 <domain type='kvm'>
-  <name></name>
+  <name>/home/alexz/work/diplom/test_spawner1/systems/dep1_.qcow2</name>
   <memory>1048576</memory>
   <currentMemory>1048576</currentMemory>
   <vcpu>1</vcpu>

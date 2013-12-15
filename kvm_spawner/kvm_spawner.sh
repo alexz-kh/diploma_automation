@@ -62,9 +62,10 @@ echo    # just move to a new line
 	echo "Choosed 1=Broker"
 	REPLY="broker"
 	sed -i "s/role=.*/role=\"${REPLY}\"/g" ../role/next_role.sh
-	git add .
-	git commit -a -m "change role to ${REPLY}"
-	git push
+	HDD="${BASE_DIR}/systems/${SYSTEMS_PREFIX}_${role}.qcow2"
+#	git add .
+#	git commit -a -m "change role to ${REPLY}"
+#	git push
 	source ../role/next_role.sh
 	prepare_vm $REPLY
     elif [[ $REPLY =~ ^[2]$ ]]
