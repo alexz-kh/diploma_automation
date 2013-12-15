@@ -71,7 +71,6 @@ echo    # just move to a new line
 	git push
 	source ../role/next_role.sh
 	prepare_vm $REPLY
-
     elif [[ $REPLY =~ ^[2]$ ]]
     then 
 	echo "Choosed 2=Node"
@@ -88,6 +87,7 @@ git push
 source ../role/next_role.sh
 
 
+exit 1
 ###########Prepare and define systems#########
 footer "Start kvm system with ROLE=${role}"
 HDD="${BASE_DIR}/systems/${SYSTEMS_PREFIX}_${role}.qcow2"
