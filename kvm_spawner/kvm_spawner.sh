@@ -20,14 +20,14 @@ checker(){
 
 prepare_vm(){
 
-if [[ $1 =~ ^[broker]$ ]]
+if [[ $1 =~ ^[broker] ]]
     then
 	echo "Prepare system for Broker:"
 	sed -e "s#HDD_STUB#${HDD}#g" broker_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
 	sed -e "s#NAME_STUB#${HDD}#g" broker_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
 
 	"exit "
-elif [[ $1 =~ ^[node]$ ]]
+elif [[ $1 =~ ^[node] ]]
     then 
 	echo "Prepare system for node:"
 	sed -e "s#HDD_STUB#${HDD}#g" node_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
