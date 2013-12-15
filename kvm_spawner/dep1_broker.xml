@@ -20,7 +20,7 @@
     <emulator>/usr/bin/kvm-spice</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='HDD_STUB'/>
+      <source file='/home/alexz/work/diplom/test_spawner1/systems/dep1_broker.qcow2'/>
       <target dev='vda' bus='virtio'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
     </disk>

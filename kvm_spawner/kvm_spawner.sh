@@ -25,7 +25,7 @@ if [[ $1 =~ ^[broker] ]]
 	echo "Prepare system for Broker:"
 	HDD="${BASE_DIR}/systems/${SYSTEMS_PREFIX}_${role}.qcow2"
 	sed -e "s#HDD_STUB#${HDD}#g" broker_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
-	sed -e "s#NAME_STUB#${HDD}#g" broker_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
+	sed -i "s#NAME_STUB#${HDD}#g" ${SYSTEMS_PREFIX}_${role}.xml
 
 	"exit "
 elif [[ $1 =~ ^[node] ]]
