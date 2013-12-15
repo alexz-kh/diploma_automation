@@ -23,6 +23,7 @@ prepare_vm(){
 if [[ $1 =~ ^[broker] ]]
     then
 	echo "Prepare system for Broker:"
+	HDD="${BASE_DIR}/systems/${SYSTEMS_PREFIX}_${role}.qcow2"
 	sed -e "s#HDD_STUB#${HDD}#g" broker_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
 	sed -e "s#NAME_STUB#${HDD}#g" broker_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
 
@@ -62,12 +63,12 @@ echo    # just move to a new line
 	echo "Choosed 1=Broker"
 	REPLY="broker"
 	sed -i "s/role=.*/role=\"${REPLY}\"/g" ../role/next_role.sh
-	HDD="${BASE_DIR}/systems/${SYSTEMS_PREFIX}_${role}.qcow2"
 #	git add .
 #	git commit -a -m "change role to ${REPLY}"
 #	git push
 	source ../role/next_role.sh
 	prepare_vm $REPLY
+
     elif [[ $REPLY =~ ^[2]$ ]]
     then 
 	echo "Choosed 2=Node"
