@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-role="node"
+role="broker"
 
 TEMPHOSTNAME="brokertest"
 

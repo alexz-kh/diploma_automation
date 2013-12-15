@@ -46,7 +46,11 @@ echo    # just move to a new line
     fi
 #######
 sed -i "s/role=.*/role=\"${REPLY}\"/g" ../role/next_role.sh
+git add .
+git commit -a -m "change role to ${REPLY}"
+git push
 source ../role/next_role.sh
+
 
 ###########Prepare and define systems#########
 footer "Start kvm system with ROLE=${role}"
