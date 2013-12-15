@@ -19,22 +19,32 @@ checker(){
 }
 
 prepare_vm(){
-
-if [[ $1 =~ ^[broker] ]]
-    then
-	echo "Prepare system for Broker:"
-	HDD="${BASE_DIR}/systems/${SYSTEMS_PREFIX}_${role}.qcow2"
-	sed -e "s#HDD_STUB#${HDD}#g" broker_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
-	sed -i "s#NAME_STUB#${HDD}#g" ${SYSTEMS_PREFIX}_${role}.xml
-
-	"exit "
-elif [[ $1 =~ ^[node] ]]
-    then 
-	echo "Prepare system for node:"
-	sed -e "s#HDD_STUB#${HDD}#g" node_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
-	sed -e "s#NAME_STUB#${HDD}#g" node_template.xml > ${SYSTEMS_PREFIX}_${role}.xml
-	exit
-
+if [ "$1" == "broker" ] || [ "$1" == "node" ]; then
+	echo "Prepare system for role=$1"
+	echo "role=$1 hostname=$2"
+	HDD="${BASE_DIR}/systems/$2.qcow2"
+	sed -e "s#HDD_STUB#${HDD}#g" ${1}_template.xml > ${2}.xml
+	sed -i "s#NAME_STUB#${2}#g" ${2}.xml
+	#copy hdd image
+	if [ -f ${HDD} ]
+	    then
+	    echo "Error!HDD file ($HDD) already exist!Rewrite or skip?"
+		read -p "[R/S]" -n 1 -r
+		echo    # just move to a new line
+		    if [[ $REPLY =~ ^[Rr]$ ]]
+	    	    then
+	    		# do dangerous stuff
+	    		cp -f ${COPY_FROM_IMG} ${HDD}
+		    else 
+			footer "Use OLD hdd image.Its bad idea,but okay :("
+		    fi
+	    else
+    		cp ${COPY_FROM_IMG} ${HDD}
+		checker "When try copy img!"
+	    fi
+	virsh define ${2}.xml
+	checker "When try define systems!"
+	footer "Finish define kvm system with ROLE=${1}"
 else
         footer "Wrong choose,Neo..."
 	exit 1
@@ -46,9 +56,10 @@ fi
 
 
 SYSTEMS_PREFIX="dep1"
-COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/centos_clear_wo_lvm_40G_2.6.32-431.el6.x86_64.qcow2"
-#COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/stub.qcow2"
+#COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/centos_clear_wo_lvm_40G_2.6.32-431.el6.x86_64.qcow2"
+COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/stub.qcow2"
 BASE_DIR="/home/alexz/work/diplom/test_spawner1"
+
 
 mkdir -p "${BASE_DIR}/systems"
 
@@ -61,77 +72,40 @@ echo    # just move to a new line
     if [[ $REPLY =~ ^[1]$ ]]
     then
 	echo "Choosed 1=Broker"
-	REPLY="broker"
-	sed -i "s/role=.*/role=\"${REPLY}\"/g" ../role/next_role.sh
+	ROLE="broker"
+	sed -i "s/role=.*/role=\"${ROLE}\"/g" ../role/next_role.sh
 #	git add .
 #	git commit -a -m "change role to ${REPLY}"
 #	git push
 	source ../role/next_role.sh
-	prepare_vm $REPLY
+#	generate_hostname_funx="${SYSTEMS_PREFIX}_broker"
+# in this tool, broker can be only one!
+	HOSTNAME="${SYSTEMS_PREFIX}_broker"
+	prepare_vm $ROLE $HOSTNAME
 
     elif [[ $REPLY =~ ^[2]$ ]]
     then 
 	echo "Choosed 2=Node"
-	REPLY="node"
+	ROLE="node"
+	sed -i "s/role=.*/role=\"${ROLE}\"/g" ../role/next_role.sh
+#	git add .
+#	git commit -a -m "change role to ${REPLY}"
+#	git push
+	source ../role/next_role.sh
+#	generate_hostname_funx="${SYSTEMS_PREFIX}_nextnode"
+	HOSTNAME="${SYSTEMS_PREFIX}_node1"
+	prepare_vm $ROLE $HOSTNAME
+
     else
         footer "Wrong choose,Neo..."
 	exit 1
     fi
 #######
-sed -i "s/role=.*/role=\"${REPLY}\"/g" ../role/next_role.sh
-git add .
-git commit -a -m "change role to ${REPLY}"
-git push
 source ../role/next_role.sh
-HDD="${BASE_DIR}/systems/${SYSTEMS_PREFIX}_${role}.qcow2"
-
-
-exit 1
-###########Prepare and define systems#########
-footer "Start kvm system with ROLE=${role}"
-HDD="${BASE_DIR}/systems/${SYSTEMS_PREFIX}_${role}.qcow2"
-
-
-if [ -f ${HDD} ]
-then
-    echo "Error!HDD file ($HDD) already exist!Rewrite or skip?"
-    read -p "[R/S]" -n 1 -r
-    echo    # just move to a new line
-    if [[ $REPLY =~ ^[Rr]$ ]]
-    then
-        # do dangerous stuff
-        cp -f ${COPY_FROM_IMG} ${HDD}
-    else 
-        footer "Aborted..."
-	exit 1
-    fi
-else
-    cp ${COPY_FROM_IMG} ${HDD}
-    checker "When try copy img!"
-fi
-
-##
-exit 
-
-
-
-
-###
-
-
-
-virsh define ${SYSTEMS_PREFIX}_${role}.xml
-checker "When try define systems!"
-footer "Finish define kvm system with ROLE=${role}"
-##########
-
-
-
-
-
 
 
 exit
+
 #TEMPHOSTNAME="brokertest1"
 #OURBIND="37.57.27.211"
 #CLOUDNAME="kpi.diplom.net"
