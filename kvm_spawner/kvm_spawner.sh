@@ -44,10 +44,6 @@ fi
 
 
 
-
-
-
-
 SYSTEMS_PREFIX="dep1"
 COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/centos_clear_wo_lvm_40G_2.6.32-431.el6.x86_64.qcow2"
 #COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/stub.qcow2"
@@ -85,6 +81,7 @@ git add .
 git commit -a -m "change role to ${REPLY}"
 git push
 source ../role/next_role.sh
+HDD="${BASE_DIR}/systems/${SYSTEMS_PREFIX}_${role}.qcow2"
 
 
 exit 1
