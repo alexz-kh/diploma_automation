@@ -6,7 +6,7 @@ cd $DIR
 #Put this file on VMs!
 
 
-if [ -d "/root/bootstrap/finish" ] ; then exit 
+if [ -f "/root/bootstrap/finish" ] ; then exit 
 
 else 
 
