@@ -33,7 +33,7 @@ if [ -d "diploma_automation" ]; then
 
 fi
 
-./diploma_automation/init/install.sh 2>>&1  /root/bootstrap/os_init_log_`date "+%Y-%m-%d-%H-%M"`
+./diploma_automation/init/install.sh &>>  /root/bootstrap/os_init_log_`date "+%Y-%m-%d-%H-%M"`
 
 fi
 exit
