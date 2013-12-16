@@ -2,9 +2,7 @@
 
 #for debug use bash -x ./kvm_spawner.sh
 
-#TEMPHOSTNAME=$1
 DIR=`dirname $0`
-
 
 footer(){
     echo "=============== ================="
@@ -13,15 +11,28 @@ footer(){
 }
 checker(){
     if [ $? -ne 0 ]; then
-    footer "Error!$1"
-	exit 1
-    fi
+    footer "Error!$1" ; exit 1 ; fi
 }
 
+generate_next_nodename_funx(){
+    nodes_all_count=0
+    read nodes_all <<< `virsh list --all |grep -v "broker" | grep "${SYSTEMS_PREFIX}" | awk ' {print $2}'`
+    read nodes_all_count <<< `virsh list --all |grep -v "broker" | grep "${SYSTEMS_PREFIX}" | wc -l `
+
+    echo -e "For deployment \"${SYSTEMS_PREFIX}\" you have VMs: $nodes_all.\n Count: $nodes_all_count"
+    #gen next node name
+    let "nodes_all_count++"
+    echo "next=$nodes_all_count"
+    VMNAME=${SYSTEMS_PREFIX}-node-$nodes_all_count
+}
+
+
 prepare_vm(){
+mkdir -p "${BASE_DIR}/systems"
+
 if [ "$1" == "broker" ] || [ "$1" == "node" ]; then
 	echo "Prepare system for role=$1"
-	echo "role=$1 hostname=$2"
+	echo "role=$1 VMNAME=$2"
 	HDD="${BASE_DIR}/systems/$2.qcow2"
 	sed -e "s#HDD_STUB#${HDD}#g" ${1}_template.xml > ${2}.xml
 	sed -i "s#NAME_STUB#${2}#g" ${2}.xml
@@ -44,28 +55,18 @@ if [ "$1" == "broker" ] || [ "$1" == "node" ]; then
 	    fi
 	virsh define ${2}.xml
 	checker "When try define systems!"
-	footer "Finish define kvm system with ROLE=${1}"
+	footer "Finish define kvm system with ROLE=${1} and fqdn=$TEMPHOSTNAME.$CLOUDNAME"
 else
         footer "Wrong choose,Neo..."
 	exit 1
 fi
-
 }
 
 
-
-
-SYSTEMS_PREFIX="dep1"
-#COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/centos_clear_wo_lvm_40G_2.6.32-431.el6.x86_64.qcow2"
-COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/stub.qcow2"
-BASE_DIR="/home/alexz/work/diplom/test_spawner1"
-
-
-mkdir -p "${BASE_DIR}/systems"
-
-
 ####Role chooser####
-echo "Choose next system role:"
+source ../role/next_role.sh
+
+echo "Choose next VM-system role:"
 echo -e "1)Broker \n2)Node"
 read -p "[1/2]" -n 1 -r
 echo    # just move to a new line
@@ -78,10 +79,10 @@ echo    # just move to a new line
 #	git commit -a -m "change role to ${REPLY}"
 #	git push
 	source ../role/next_role.sh
-#	generate_hostname_funx="${SYSTEMS_PREFIX}_broker"
 # in this tool, broker can be only one!
-	HOSTNAME="${SYSTEMS_PREFIX}_broker"
-	prepare_vm $ROLE $HOSTNAME
+	sed -i "s/TEMPHOSTNAME=.*/TEMPHOSTNAME=\"$SYSTEMS_PREFIX-broker.$CLOUDNAME\"/g" ../role/next_role.sh
+	BROKERNAME="${SYSTEMS_PREFIX}-broker.${$CLOUDNAME}"
+	prepare_vm $ROLE $BROKERNAME
 
     elif [[ $REPLY =~ ^[2]$ ]]
     then 
@@ -92,137 +93,20 @@ echo    # just move to a new line
 #	git commit -a -m "change role to ${REPLY}"
 #	git push
 	source ../role/next_role.sh
-#	generate_hostname_funx="${SYSTEMS_PREFIX}_nextnode"
-	HOSTNAME="${SYSTEMS_PREFIX}_node1"
-	prepare_vm $ROLE $HOSTNAME
+	generate_next_nodename_funx
+	sed -i "s/TEMPHOSTNAME=.*/TEMPHOSTNAME=\"${VMNAME}\"/g" ../role/next_role.sh
+	echo "vmname=$VMNAME"
+	prepare_vm $ROLE $VMNAME
+	sleep 1
+	echo "Running $VMNAME"
+	sleep 1
+#	virsh start $VMNAME
 
     else
         footer "Wrong choose,Neo..."
 	exit 1
     fi
 #######
-source ../role/next_role.sh
 
 
 exit
-
-#TEMPHOSTNAME="brokertest1"
-#OURBIND="37.57.27.211"
-#CLOUDNAME="kpi.diplom.net"
-#NAMED_TSIG_PRIV_KEY="XI1h53oLBi1uGXEbV1NU301BQp/w5A=="
-#BROKER_FQDN="brokertest1.kpi.diplom.net"
-
-###Start registrathions on DNS
-
-IP_ADDRESS=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
-
-yum install -y bind-utils
-
-cat <<EOF > /etc/sysconfig/network
-NETWORKING=yes
-HOSTNAME=${TEMPHOSTNAME}.${CLOUDNAME}
-EOF
-
-hostname ${TEMPHOSTNAME}.${CLOUDNAME}
-domainname ${CLOUDNAME}
-
-cat <<  _EOF > nsupdate.key
-    key kpi.diplom.net {
-      algorithm HMAC-MD5;
-        secret "$NAMED_TSIG_PRIV_KEY";
-    };
-_EOF
-
-cat <<  _EOF > nsupdate.cmd
-    server ${OURBIND} 53
-    update delete ${TEMPHOSTNAME}.${CLOUDNAME} A
-    update add ${TEMPHOSTNAME}.${CLOUDNAME} 180 A ${IP_ADDRESS}
-    send
-_EOF
-
-chattr -i /etc/resolv.conf
-cat <<EOF > /etc/resolv.conf
-nameserver ${OURBIND}
-EOF
-chattr +i /etc/resolv.conf
-
-nsupdate -k nsupdate.key -d nsupdate.cmd
-
-
-#################################################
-yum install -y --nogpgcheck http://dl.fedoraproject.org/pub/epel/6/x86_64//epel-release-6-8.noarch.rpm
-yum install -y --nogpgcheck http://yum.puppetlabs.com/el/6/products/x86_64/puppetlabs-release-6-7.noarch.rpm
-
-cat <<EOF > /etc/yum.repos.d/epel.repo
-[epel]
-name=Extra Packages for Enterprise Linux 6 - \$basearch
-#baseurl=http://download.fedoraproject.org/pub/epel/6/\$basearch
-mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=\$basearch
-failovermethod=priority
-enabled=1
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
-exclude=*mcollective*
-EOF
-
-cat <<EOF > /etc/yum.repos.d/puppetlabs.repo
-[puppetlabs-products]
-name=Puppet Labs Products El 6 - \$basearch
-baseurl=http://yum.puppetlabs.com/el/6/products/\$basearch
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs
-enabled=1
-gpgcheck=1
-exclude=*mcollective*
-
-[puppetlabs-deps]
-name=Puppet Labs Dependencies El 6 - \$basearch
-baseurl=http://yum.puppetlabs.com/el/6/dependencies/\$basearch
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs
-enabled=1
-gpgcheck=1
-exclude=*mcollective*
-EOF
-
-yum install -y puppet facter tar
-mkdir -p /etc/puppet/modules
-yes|cp -rf diploma_automation/init/modules_fixed_release2/* /etc/puppet/modules/
-
-#####################3
-#Start generating manifests:
-
-cat <<EOF > manifest_broker.pp
-class { 'openshift_origin' :
-  node_fqdn                  => "${TEMPHOSTNAME}.${CLOUDNAME}",
-  cloud_domain               => '${CLOUDNAME}',
-  dns_servers                => ['8.8.8.8'],
-  os_unmanaged_users         => [],
-  enable_network_services    => true,
-  configure_firewall         => true,
-  configure_ntp              => true,
-  configure_activemq         => true,
-  configure_mongodb          => true,
-  configure_named            => false,
-  configure_avahi            => false,
-  configure_broker           => true,
-  configure_node             => false,
-  development_mode           => true,
-  broker_auth_plugin         => 'mongo',
-  broker_dns_plugin          => 'nsupdate',
-  broker_dns_gsstsig         => true,
-  named_ipaddress=> "${OURBIND}",
-  broker_fqdn=> "${BROKER_FQDN}",
-  named_tsig_priv_key=> "${NAMED_TSIG_PRIV_KEY}",
-
-}
-EOF
-
-puppet apply --verbose manifest_broker.pp
-
-
-exit
-
-####FIXER:
-###yum install npm -y
-
-
-
