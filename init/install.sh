@@ -119,7 +119,7 @@ EOF
 
 puppet apply --verbose manifest_broker.pp
 
-
+touch /root/bootstrap/finish
 exit
 
 ####FIXER:

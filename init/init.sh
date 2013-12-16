@@ -5,6 +5,11 @@ cd $DIR
 
 #Put this file on VMs!
 
+
+if [ -d "/root/bootstrap/finish" ] ; then exit 
+
+else 
+
 if which git >/dev/null; then
     echo "Git exist,all ok,go next!"
 else
@@ -24,11 +29,11 @@ if [ -d "diploma_automation" ]; then
     git clone git://github.com/alexz-kh/diploma_automation.git
 fi
 
-
 ./diploma_automation/init/install.sh
 
+fi
 
-exit 
+exit
 
 
 
