@@ -76,13 +76,17 @@ echo    # just move to a new line
 	ROLE="broker"
 	sed -i "s/role=.*/role=\"${ROLE}\"/g" ../role/next_role.sh
 #	git add .
-#	git commit -a -m "change role to ${REPLY}"
-#	git push
+	git commit  ../role/next_role.sh -m "change role to ${REPLY}"
+	git push
 	source ../role/next_role.sh
 # in this tool, broker can be only one!
-	sed -i "s/TEMPHOSTNAME=.*/TEMPHOSTNAME=\"$SYSTEMS_PREFIX-broker.$CLOUDNAME\"/g" ../role/next_role.sh
-	BROKERNAME="${SYSTEMS_PREFIX}-broker.${$CLOUDNAME}"
+	sed -i "s/TEMPHOSTNAME=.*/TEMPHOSTNAME=\"$SYSTEMS_PREFIX-broker\"/g" ../role/next_role.sh
+	BROKERNAME="${SYSTEMS_PREFIX}-broker"
 	prepare_vm $ROLE $BROKERNAME
+	sleep 1
+	echo "Running $VMNAME"
+	sleep 1
+	virsh start $VMNAME
 
     elif [[ $REPLY =~ ^[2]$ ]]
     then 
@@ -91,7 +95,8 @@ echo    # just move to a new line
 	sed -i "s/role=.*/role=\"${ROLE}\"/g" ../role/next_role.sh
 #	git add .
 #	git commit -a -m "change role to ${REPLY}"
-#	git push
+	git commit ../role/next_role.sh -m "change role to ${REPLY}"
+	git push
 	source ../role/next_role.sh
 	generate_next_nodename_funx
 	sed -i "s/TEMPHOSTNAME=.*/TEMPHOSTNAME=\"${VMNAME}\"/g" ../role/next_role.sh
@@ -100,7 +105,7 @@ echo    # just move to a new line
 	sleep 1
 	echo "Running $VMNAME"
 	sleep 1
-#	virsh start $VMNAME
+	virsh start $VMNAME
 
     else
         footer "Wrong choose,Neo..."
