@@ -84,9 +84,9 @@ echo    # just move to a new line
 	BROKERNAME="${SYSTEMS_PREFIX}-broker"
 	prepare_vm $ROLE $BROKERNAME
 	sleep 1
-	echo "Running $VMNAME"
+	echo "Running $BROKERNAME"
 	sleep 1
-	virsh start $VMNAME
+	virsh start $BROKERNAME
 
     elif [[ $REPLY =~ ^[2]$ ]]
     then 
