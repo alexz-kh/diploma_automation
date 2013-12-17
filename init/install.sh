@@ -117,7 +117,7 @@ class { 'openshift_origin' :
 }
 EOF
 
-puppet apply --verbose manifest_broker.pp
+puppet apply manifest_broker.pp -vd --logdest /root/log_`date "+%Y-%m-%d-%H-%M"`
 
 touch /root/bootstrap/finish
 exit
