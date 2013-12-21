@@ -108,7 +108,7 @@ cat <<EOF > manifest_broker.pp
       configure_named            => false,
       configure_avahi            => false,
       configure_broker           => true,
-      configure_node             => false,
+      configure_node             => true,
       development_mode           => true,
       broker_auth_plugin         => 'mongo',
       broker_dns_plugin          => 'nsupdate',
