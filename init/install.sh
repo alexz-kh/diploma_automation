@@ -87,58 +87,60 @@ yes|cp -rf modules_fixed_release2/* /etc/puppet/modules/
 #Start generating manifests:
 
 if [ $role == "broker" ]; then
-        cat <<EOF > manifest_broker.pp
-        class { 'openshift_origin' :
-          node_fqdn                  => "${TEMPHOSTNAME}.${CLOUDNAME}",
-          cloud_domain               => '${CLOUDNAME}',
-          dns_servers                => ['8.8.8.8'],
-          os_unmanaged_users         => [],
-          enable_network_services    => true,
-          configure_firewall         => true,
-          configure_ntp              => true,
-          configure_activemq         => true,
-          configure_mongodb          => true,
-          configure_named            => false,
-          configure_avahi            => false,
-          configure_broker           => true,
-          configure_node             => false,
-          development_mode           => true,
-          broker_auth_plugin         => 'mongo',
-          broker_dns_plugin          => 'nsupdate',
-          broker_dns_gsstsig         => true,
-          named_ipaddress=> "${OURBIND}",
-          broker_fqdn=> "${BROKER_FQDN}",
-          named_tsig_priv_key=> "${NAMED_TSIG_PRIV_KEY}",
-        }
-        EOF
-	checker "when try generate manifest!"
-	puppet apply manifest_broker.pp -vd --logdest /root/bootstrap/log_`date "+%Y-%m-%d-%H-%M"`
+cat <<EOF > manifest_broker.pp
+    class { 'openshift_origin' :
+      node_fqdn                  => "${TEMPHOSTNAME}.${CLOUDNAME}",
+      cloud_domain               => '${CLOUDNAME}',
+      dns_servers                => ['8.8.8.8'],
+      os_unmanaged_users         => [],
+      enable_network_services    => true,
+      configure_firewall         => true,
+      configure_ntp              => true,
+      configure_activemq         => true,
+      configure_mongodb          => true,
+      configure_named            => false,
+      configure_avahi            => false,
+      configure_broker           => true,
+      configure_node             => false,
+      development_mode           => true,
+      broker_auth_plugin         => 'mongo',
+      broker_dns_plugin          => 'nsupdate',
+      broker_dns_gsstsig         => true,
+      named_ipaddress=> "${OURBIND}",
+      broker_fqdn=> "${BROKER_FQDN}",
+      named_tsig_priv_key=> "${NAMED_TSIG_PRIV_KEY}",
+    }
+EOF
+
+checker "when try generate manifest!"
+puppet apply manifest_broker.pp -vd --logdest /root/bootstrap/log_`date "+%Y-%m-%d-%H-%M"`
+
 elif
 if [ $role == "node" ]; then
-        cat <<EOF > manifest_node.pp
-        class { 'openshift_origin' :
-          node_fqdn                  => "${TEMPHOSTNAME}.${CLOUDNAME}",
-          cloud_domain               => '${CLOUDNAME}',
-          dns_servers                => ['8.8.8.8'],
-          os_unmanaged_users         => [],
-          enable_network_services    => true,
-          configure_firewall         => true,
-          configure_ntp              => true,
-          configure_activemq         => true,
-          configure_mongodb          => true,
-          configure_named            => false,
-          configure_avahi            => false,
-          configure_broker           => false,
-          configure_node             => true,
-          development_mode           => true,
-          broker_auth_plugin         => 'mongo',
-          broker_dns_plugin          => 'nsupdate',
-          broker_dns_gsstsig         => true,
-          named_ipaddress=> "${OURBIND}",
-          broker_fqdn=> "${BROKER_FQDN}",
-          named_tsig_priv_key=> "${NAMED_TSIG_PRIV_KEY}",
-        }
-        EOF
+    cat <<EOF > manifest_node.pp
+    class { 'openshift_origin' :
+      node_fqdn                  => "${TEMPHOSTNAME}.${CLOUDNAME}",
+      cloud_domain               => '${CLOUDNAME}',
+      dns_servers                => ['8.8.8.8'],
+      os_unmanaged_users         => [],
+      enable_network_services    => true,
+      configure_firewall         => true,
+      configure_ntp              => true,
+      configure_activemq         => true,
+      configure_mongodb          => true,
+      configure_named            => false,
+      configure_avahi            => false,
+      configure_broker           => false,
+      configure_node             => true,
+      development_mode           => true,
+      broker_auth_plugin         => 'mongo',
+      broker_dns_plugin          => 'nsupdate',
+      broker_dns_gsstsig         => true,
+      named_ipaddress=> "${OURBIND}",
+      broker_fqdn=> "${BROKER_FQDN}",
+      named_tsig_priv_key=> "${NAMED_TSIG_PRIV_KEY}",
+    }
+EOF
 	checker "when try generate manifest!"
 	puppet apply manifest_node.pp -vd --logdest /root/bootstrap/log_`date "+%Y-%m-%d-%H-%M"`
 else 
