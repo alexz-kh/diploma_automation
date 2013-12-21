@@ -55,6 +55,7 @@ if [ "$1" == "broker" ] || [ "$1" == "node" ]; then
 	    fi
 	virsh define ${2}.xml
 	checker "When try define systems!"
+	source ../role/next_role.sh
 	footer "Finish define kvm system with ROLE=${1} and fqdn=$TEMPHOSTNAME.$CLOUDNAME"
 else
         footer "Wrong choose,Neo..."
