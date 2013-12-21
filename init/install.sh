@@ -115,9 +115,8 @@ EOF
 checker "when try generate manifest!"
 puppet apply manifest_broker.pp -vd --logdest /root/bootstrap/log_`date "+%Y-%m-%d-%H-%M"`
 
-elif
-if [ $role == "node" ]; then
-    cat <<EOF > manifest_node.pp
+elif [ $role == "node" ]; then
+cat <<EOF > manifest_node.pp
     class { 'openshift_origin' :
       node_fqdn                  => "${TEMPHOSTNAME}.${CLOUDNAME}",
       cloud_domain               => '${CLOUDNAME}',
