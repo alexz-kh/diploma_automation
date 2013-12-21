@@ -3,6 +3,11 @@
 DIR=`dirname $0`
 cd $DIR
 
+footer(){
+    echo "=============== ================="
+    echo "===============  $1 ================="
+    echo "=============== ================="
+}
 checker(){
     if [ $? -ne 0 ]; then
     footer "Error!$1" ; exit 1 ; fi
@@ -144,6 +149,8 @@ cat <<EOF > manifest_node.pp
 EOF
 	checker "when try generate manifest!"
 	puppet apply manifest_node.pp -vd --logdest /root/bootstrap/log_`date "+%Y-%m-%d-%H-%M"`
+  if [ $? -ne 0 ]; then
+    footer "Error!$1" ; echo "ERROR!see log!"> /root/bootstrap/finish ; exit 1 ; fi
 else 
     checker "when try generate manifest!"
 fi
