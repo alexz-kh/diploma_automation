@@ -121,6 +121,10 @@ EOF
 
 checker "when try generate manifest!"
 puppet apply manifest_broker.pp -vd --logdest /root/bootstrap/log_`date "+%Y-%m-%d-%H-%M"`
+  if [ $? -ne 0 ]; then
+    footer "Error!$1" ; echo "ERROR!see log!"> /root/bootstrap/finish ; exit 1 ; fi	
+sed -i -e '20 s/^/export activemq_conf=\"\/etc\/activemq\"\n/;' /etc/init.d/activemq
+sed -i -e '21 s/^/export activemq_data=\"\/var\/cache\/activemq\/data\"\n/;' /etc/init.d/activemq
 
 elif [ $role == "node" ]; then
 cat <<EOF > manifest_node.pp
@@ -149,14 +153,17 @@ cat <<EOF > manifest_node.pp
 EOF
 	checker "when try generate manifest!"
 	puppet apply manifest_node.pp -vd --logdest /root/bootstrap/log_`date "+%Y-%m-%d-%H-%M"`
-  if [ $? -ne 0 ]; then
-    footer "Error!$1" ; echo "ERROR!see log!"> /root/bootstrap/finish ; exit 1 ; fi
+	  if [ $? -ne 0 ]; then
+	    footer "Error!$1" ; echo "ERROR!see log!"> /root/bootstrap/finish ; exit 1 ; fi	
+	yum install npm -y
 else 
     checker "when try generate manifest!"
 fi
 #Now,time for fixes...
-yum install npm -y
+#yum install npm -y
 
+#sed -i -e '20 s/^/export activemq_conf=\"\/etc\/activemq\"\n/;' /etc/init.d/activemq
+#sed -i -e '21 s/^/export activemq_data=\"\/var\/cache\/activemq\/data\"\n/;' /etc/init.d/activemq
 
 
 touch /root/bootstrap/finish
