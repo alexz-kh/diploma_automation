@@ -13,7 +13,7 @@ BASE_DIR="/home/alexz/work/diplom/test_spawner1"
 #OpenShift system config for next spawn:
 CLOUDNAME="kpi.diplom.net"
 #Do not edit TEMPHOSTNAME!
-TEMPHOSTNAME="prefix1-node-1"
+TEMPHOSTNAME="prefix1-broker"
 BROKER_FQDN="$SYSTEMS_PREFIX-broker.$CLOUDNAME"
 #OURBIND="37.57.27.211"
 OURBIND="8.8.8.8"
