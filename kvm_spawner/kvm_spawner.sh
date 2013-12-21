@@ -3,7 +3,7 @@
 #for debug use bash -x ./kvm_spawner.sh
 
 DIR=`dirname $0`
-
+cd $DIR
 footer(){
     echo "=============== ================="
     echo "===============  $1 ================="
