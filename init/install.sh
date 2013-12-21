@@ -2,13 +2,14 @@
 
 DIR=`dirname $0`
 cd $DIR
-source ../role/next_role.sh
 
 checker(){
     if [ $? -ne 0 ]; then
     footer "Error!$1" ; exit 1 ; fi
 }
 
+source ../role/next_role.sh
+checker "start failed.."
 
 ###Start registrathions on DNS
 
