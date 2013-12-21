@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-role="broker"
+role="node"
 
 #kvm spawner config:
 SYSTEMS_PREFIX="prefix1"
