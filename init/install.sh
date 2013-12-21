@@ -154,12 +154,15 @@ EOF
 else 
     checker "when try generate manifest!"
 fi
+#Now,time for fixes...
+yum install npm -y
+
+
 
 touch /root/bootstrap/finish
 exit
 
 ####FIXER:
-###yum install npm -y
 
 
 
