@@ -12,8 +12,6 @@ checker(){
 
 IP_ADDRESS=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 
-yum install -y bind-utils
-
 cat <<EOF > /etc/sysconfig/network
 NETWORKING=yes
 HOSTNAME=${TEMPHOSTNAME}.${CLOUDNAME}
@@ -42,6 +40,7 @@ nameserver ${OURBIND}
 EOF
 chattr +i /etc/resolv.conf
 
+yum install -y bind-utils
 nsupdate -k nsupdate.key -d nsupdate.cmd
 
 
