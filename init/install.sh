@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source diploma_automation/role/next_role.sh
+source ../role/next_role.sh
 
 checker(){
     if [ $? -ne 0 ]; then
