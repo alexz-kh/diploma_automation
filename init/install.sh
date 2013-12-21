@@ -160,11 +160,11 @@ else
     checker "when try generate manifest!"
 fi
 #Now,time for fixes...
-#yum install npm -y
-
-#sed -i -e '20 s/^/export activemq_conf=\"\/etc\/activemq\"\n/;' /etc/init.d/activemq
+#yum install npm -y -for nodes only
+#for broker
+#sed -i -e '20 s/^/export activemq_conf=\"\/etc\/activemq\"\n/;' /etc/init.d/activemq  
 #sed -i -e '21 s/^/export activemq_data=\"\/var\/cache\/activemq\/data\"\n/;' /etc/init.d/activemq
-
+sed -i "s/php-5.4/php-5.3/g" /etc/openshift/quickstarts.json
 
 touch /root/bootstrap/finish
 exit

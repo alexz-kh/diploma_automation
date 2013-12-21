@@ -1,7 +1,7 @@
 <domain type='kvm'>
   <name>NAME_STUB</name>
-  <memory>1048576</memory>
-  <currentMemory>1048576</currentMemory>
+  <memory>2097152</memory>
+  <currentMemory>2097152</currentMemory>
   <vcpu>1</vcpu>
   <os>
     <type arch='x86_64' machine='pc-1.1'>hvm</type>
