@@ -1,17 +1,12 @@
 #!/bin/bash
 
-
-
-#TEMPHOSTNAME=$1
-
-
 source diploma_automation/role/next_role.sh
 
-#TEMPHOSTNAME="brokertest1"
-#OURBIND="37.57.27.211"
-#CLOUDNAME="kpi.diplom.net"
-#NAMED_TSIG_PRIV_KEY="XI1h53oLBi1uGXEbV1NU301BQp/w5A=="
-#BROKER_FQDN="brokertest1.kpi.diplom.net"
+checker(){
+    if [ $? -ne 0 ]; then
+    footer "Error!$1" ; exit 1 ; fi
+}
+
 
 ###Start registrathions on DNS
 
@@ -86,38 +81,69 @@ EOF
 
 yum install -y puppet facter tar
 mkdir -p /etc/puppet/modules
-yes|cp -rf diploma_automation/init/modules_fixed_release2/* /etc/puppet/modules/
+yes|cp -rf modules_fixed_release2/* /etc/puppet/modules/
 
-#####################3
+#####################
 #Start generating manifests:
 
-cat <<EOF > manifest_broker.pp
-class { 'openshift_origin' :
-  node_fqdn                  => "${TEMPHOSTNAME}.${CLOUDNAME}",
-  cloud_domain               => '${CLOUDNAME}',
-  dns_servers                => ['8.8.8.8'],
-  os_unmanaged_users         => [],
-  enable_network_services    => true,
-  configure_firewall         => true,
-  configure_ntp              => true,
-  configure_activemq         => true,
-  configure_mongodb          => true,
-  configure_named            => false,
-  configure_avahi            => false,
-  configure_broker           => true,
-  configure_node             => false,
-  development_mode           => true,
-  broker_auth_plugin         => 'mongo',
-  broker_dns_plugin          => 'nsupdate',
-  broker_dns_gsstsig         => true,
-  named_ipaddress=> "${OURBIND}",
-  broker_fqdn=> "${BROKER_FQDN}",
-  named_tsig_priv_key=> "${NAMED_TSIG_PRIV_KEY}",
-
-}
-EOF
-
-puppet apply manifest_broker.pp -vd --logdest /root/log_`date "+%Y-%m-%d-%H-%M"`
+if [ $role == "broker" ]; then
+        cat <<EOF > manifest_broker.pp
+        class { 'openshift_origin' :
+          node_fqdn                  => "${TEMPHOSTNAME}.${CLOUDNAME}",
+          cloud_domain               => '${CLOUDNAME}',
+          dns_servers                => ['8.8.8.8'],
+          os_unmanaged_users         => [],
+          enable_network_services    => true,
+          configure_firewall         => true,
+          configure_ntp              => true,
+          configure_activemq         => true,
+          configure_mongodb          => true,
+          configure_named            => false,
+          configure_avahi            => false,
+          configure_broker           => true,
+          configure_node             => false,
+          development_mode           => true,
+          broker_auth_plugin         => 'mongo',
+          broker_dns_plugin          => 'nsupdate',
+          broker_dns_gsstsig         => true,
+          named_ipaddress=> "${OURBIND}",
+          broker_fqdn=> "${BROKER_FQDN}",
+          named_tsig_priv_key=> "${NAMED_TSIG_PRIV_KEY}",
+        }
+        EOF
+	checker "when try generate manifest!"
+	puppet apply manifest_broker.pp -vd --logdest /root/bootstrap/log_`date "+%Y-%m-%d-%H-%M"`
+elif
+if [ $role == "node" ]; then
+        cat <<EOF > manifest_node.pp
+        class { 'openshift_origin' :
+          node_fqdn                  => "${TEMPHOSTNAME}.${CLOUDNAME}",
+          cloud_domain               => '${CLOUDNAME}',
+          dns_servers                => ['8.8.8.8'],
+          os_unmanaged_users         => [],
+          enable_network_services    => true,
+          configure_firewall         => true,
+          configure_ntp              => true,
+          configure_activemq         => true,
+          configure_mongodb          => true,
+          configure_named            => false,
+          configure_avahi            => false,
+          configure_broker           => false,
+          configure_node             => true,
+          development_mode           => true,
+          broker_auth_plugin         => 'mongo',
+          broker_dns_plugin          => 'nsupdate',
+          broker_dns_gsstsig         => true,
+          named_ipaddress=> "${OURBIND}",
+          broker_fqdn=> "${BROKER_FQDN}",
+          named_tsig_priv_key=> "${NAMED_TSIG_PRIV_KEY}",
+        }
+        EOF
+	checker "when try generate manifest!"
+	puppet apply manifest_node.pp -vd --logdest /root/bootstrap/log_`date "+%Y-%m-%d-%H-%M"`
+else 
+    checker "when try generate manifest!"
+fi
 
 touch /root/bootstrap/finish
 exit
