@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DIR=`dirname $0`
+cd $DIR
 source ../role/next_role.sh
 
 checker(){
