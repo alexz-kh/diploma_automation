@@ -168,8 +168,8 @@ sed -i "s/php-5.4/php-5.3/g" /etc/openshift/quickstarts.json
 
 echo -e "\n BIND_KEYNAME=\"kpi.diplom.net\"" >> /etc/openshift/plugins.d/openshift-origin-dns-nsupdate.conf
 echo -e "\n BIND_KEYVALUE=\"XI1h53oLBi1uGXEbV1NU301BQp/w5A==\"" >> /etc/openshift/plugins.d/openshift-origin-dns-nsupdate.conf
-
 touch /root/bootstrap/finish
+reboot
 exit
 
 ####FIXER:
