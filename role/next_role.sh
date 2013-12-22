@@ -7,7 +7,8 @@ role="broker"
 SYSTEMS_PREFIX="prefix1"
 #COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/stub.qcow2"
 #COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/centos_clear_wo_lvm_40G_2.6.32-431.el6.x86_64.qcow2"
-COPY_FROM_IMG="/home/alexz/work/diplom/deployment-automation/base.qcow2"
+#COPY_FROM_IMG="/home/alexz/work/diplom/deployment-automation/base.qcow2"
+COPY_FROM_IMG="/home/alexz/work/diplom/deployment-automation/base_fast.qcow2"
 #this dir containg copyed images:
 BASE_DIR="/home/alexz/work/diplom/test_spawner1"
 
