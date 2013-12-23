@@ -166,6 +166,9 @@ fi
 #sed -i -e '21 s/^/export activemq_data=\"\/var\/cache\/activemq\/data\"\n/;' /etc/init.d/activemq
 sed -i "s/php-5.4/php-5.3/g" /etc/openshift/quickstarts.json
 
+echo -e "BIND_SERVER=\"37.57.27.211\"" >  /etc/openshift/plugins.d/openshift-origin-dns-nsupdate.conf
+echo -e "BIND_PORT=53" >>  /etc/openshift/plugins.d/openshift-origin-dns-nsupdate.conf
+echo -e "BIND_ZONE=\"kpi.diplom.net\"" >>  /etc/openshift/plugins.d/openshift-origin-dns-nsupdate.conf
 echo -e "\n BIND_KEYNAME=\"kpi.diplom.net\"" >> /etc/openshift/plugins.d/openshift-origin-dns-nsupdate.conf
 echo -e "\n BIND_KEYVALUE=\"XI1h53oLBi1uGXEbV1NU301BQp/w5A==\"" >> /etc/openshift/plugins.d/openshift-origin-dns-nsupdate.conf
 touch /root/bootstrap/finish
