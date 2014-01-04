@@ -120,6 +120,7 @@ cat <<EOF > manifest_broker.pp
 EOF
 
 checker "when try generate manifest!"
+yum install npm -y
 puppet apply manifest_broker.pp -vd --logdest /root/bootstrap/log_`date "+%Y-%m-%d-%H-%M"`
   if [ $? -ne 0 ]; then
     footer "Error!$1" ; echo "ERROR!see log!"> /root/bootstrap/finish ; exit 1 ; fi	
