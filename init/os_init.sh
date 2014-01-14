@@ -1,12 +1,9 @@
 #!/bin/bash
 
-#!/bin/bash
-
 # os_init      init file for starting installing of Openshift_fiploma
 #
 # chkconfig:   - 90 10
-# description: Starts and stops the MongDB daemon that handles all \
-#              database requests.
+# description: one time run script for my diploma
 #how-to add me:
 #Put this file on VMs! and one-time run
 #chkconfig --add /etc/init.d/os_init.sh 

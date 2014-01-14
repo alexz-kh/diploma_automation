@@ -3,6 +3,7 @@ diploma_automation
 This code\scripts just my diploma project:
 I use simple deployment-automation with Openshift Origin Server and Puppet modules.
 
+This is a terrible code, written very quickly and I hope no one never use and see them...
 
 
 
