@@ -1,8 +1,6 @@
 #!/bin/bash
 
-
 role="broker"
-
 #kvm spawner config:
 SYSTEMS_PREFIX="prefix1"
 #COPY_FROM_IMG="/home/alexz/work/imgs/checked/cloud/stub.qcow2"
