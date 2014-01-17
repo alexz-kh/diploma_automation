@@ -13,7 +13,7 @@ diploma_deployment-automation
 
 Thanks all guys from http://webchat.freenode.net/?randomnick=1&channels=openshift-dev&uio=d4
 who helps me!
-
+URL=https://github.com/alexz-kh
 =================================
 All rights reserved by
 https://www.redhat.com/about/
